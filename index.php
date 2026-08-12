@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/includes/db.php';
+
+$featuredProducts = $pdo->query(
+  'SELECT * FROM products ORDER BY is_popular DESC, id DESC LIMIT 3'
+)->fetchAll();
+?>
 <!doctype html>
 <html lang="fr">
   <head>
@@ -52,13 +59,13 @@
           Scénographie d'exception & Tenues de Prestige pour des souvenirs
           éternels.
         </p>
-        <div class="d-flex justify-content-center gap-3">
-          <a href="#calculator" class="btn btn-gold px-4 py-2 text-uppercase fw-semibold"
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 hero-actions">
+          <a href="#calculator" class="btn btn-gold px-4 py-2 text-uppercase fw-semibold w-100 w-sm-auto"
             >ESTIMER MON PROJET</a
           >
           <a
             href="#services"
-            class="btn btn-outline-light px-4 py-2 text-uppercase fw-semibold"
+            class="btn btn-outline-light px-4 py-2 text-uppercase fw-semibold w-100 w-sm-auto"
             >NOS SERVICES</a
           >
         </div>
@@ -281,45 +288,32 @@
           <h2 class="serif text-terracotta fs-2 fw-semibold">Locations de Prestige</h2>
         </div>
         <div class="row g-4">
-          <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm overflow-hidden">
-              <div class="position-relative" style="height: 22rem;">
-                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=600" alt="Robe Traditionnelle" class="w-100 h-100 object-fit-cover">
-                <span class="position-absolute top-0 end-0 bg-gold text-terracotta fw-bold px-3 py-1 m-3 rounded-pill" style="font-size: 0.85rem;">100 000 FCFA / jour</span>
+          <?php if (empty($featuredProducts)): ?>
+            <p class="text-center text-muted mb-0">Aucun article n'est disponible pour le moment.</p>
+          <?php else: ?>
+            <?php foreach ($featuredProducts as $product): ?>
+              <?php
+                $price = (float) $product['rental_price'];
+                if ($product['promo_percentage'] !== null) {
+                  $price *= 1 - ((float) $product['promo_percentage'] / 100);
+                }
+                $image = $product['image_url'];
+              ?>
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                  <div class="position-relative" style="height: 22rem;">
+                    <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($product['title']) ?>" class="w-100 h-100 object-fit-cover">
+                    <span class="position-absolute top-0 end-0 bg-gold text-terracotta fw-bold px-3 py-1 m-3 rounded-pill" style="font-size: 0.85rem;"><?= number_format($price, 0, ',', ' ') ?> FCFA / jour</span>
+                  </div>
+                  <div class="card-body p-4 text-center">
+                    <h5 class="card-title mb-2"><?= htmlspecialchars($product['title']) ?></h5>
+                    <p class="card-text mb-3"><?= htmlspecialchars($product['description'] ?: 'Découvrez cet article de notre collection prestige.') ?></p>
+                    <a href="tenues-accessoires.php" class="btn btn-gold w-100 py-2 text-uppercase fw-semibold btn-sm">Voir ce modèle</a>
+                  </div>
+                </div>
               </div>
-              <div class="card-body p-4 text-center">
-                <h5 class="card-title mb-2">Kaftan de Mariée d'Or</h5>
-                <p class="card-text mb-3">Velours de soie orné de broderies fines artisanales faites à la main.</p>
-                <a href="#calculator" class="btn btn-gold w-100 py-2 text-uppercase fw-semibold btn-sm">Réserver ce modèle</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm overflow-hidden">
-              <div class="position-relative" style="height: 22rem;">
-                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600" alt="Parure Traditionnelle" class="w-100 h-100 object-fit-cover">
-                <span class="position-absolute top-0 end-0 bg-gold text-terracotta fw-bold px-3 py-1 m-3 rounded-pill" style="font-size: 0.85rem;">50 000 FCFA / jour</span>
-              </div>
-              <div class="card-body p-4 text-center">
-                <h5 class="card-title mb-2">Parure de Perles & Or</h5>
-                <p class="card-text mb-3">Collier et diadème de perles nacrées pour sublimer votre port de tête.</p>
-                <a href="#calculator" class="btn btn-gold w-100 py-2 text-uppercase fw-semibold btn-sm">Réserver ce modèle</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm overflow-hidden">
-              <div class="position-relative" style="height: 22rem;">
-                <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&q=80&w=600" alt="Tenue de Soirée" class="w-100 h-100 object-fit-cover">
-                <span class="position-absolute top-0 end-0 bg-gold text-terracotta fw-bold px-3 py-1 m-3 rounded-pill" style="font-size: 0.85rem;">80 000 FCFA / jour</span>
-              </div>
-              <div class="card-body p-4 text-center">
-                <h5 class="card-title mb-2">Robe Émeraude Royale</h5>
-                <p class="card-text mb-3">Tissu précieux satiné avec finitions en dentelle dorée haut de gamme.</p>
-                <a href="#calculator" class="btn btn-gold w-100 py-2 text-uppercase fw-semibold btn-sm">Réserver ce modèle</a>
-              </div>
-            </div>
-          </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
         <div class="text-center mt-5">
           <a href="tenues-accessoires.html" class="catalog-link text-terracotta text-decoration-none fw-semibold text-uppercase d-inline-flex align-items-center gap-2">
@@ -370,7 +364,7 @@
         </div>
       </div>
     </footer>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/script.js"></script>
   </body>
 </html>

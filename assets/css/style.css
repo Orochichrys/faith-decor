@@ -148,6 +148,13 @@ h4,
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
+@media (max-width: 575.98px) {
+    .hero-actions .btn {
+        display: block;
+        width: 100%;
+    }
+}
+
 .hero p {
     color: var(--color-gold) !important;
     font-weight: 500;
