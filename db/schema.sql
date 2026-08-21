@@ -98,8 +98,45 @@ SELECT 'option', 'Photobooth', 175000, 4 WHERE NOT EXISTS (SELECT 1 FROM estimat
 INSERT INTO estimation_settings (setting_key, setting_value) VALUES ('guest_price', 2500)
 ON DUPLICATE KEY UPDATE setting_key = setting_key;
 
+CREATE TABLE IF NOT EXISTS project_estimations (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    event_label VARCHAR(100) NOT NULL,
+    location_label VARCHAR(100) NOT NULL,
+    guest_count INT UNSIGNED NOT NULL,
+    options_selected TEXT DEFAULT NULL,
+    total_price DECIMAL(12,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS creations (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    image_url VARCHAR(500) NOT NULL,
+    description TEXT DEFAULT NULL,
+    dimensions VARCHAR(255) DEFAULT NULL,
+    budget DECIMAL(12,2) DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    guest_count INT UNSIGNED DEFAULT NULL,
+    options_selected TEXT DEFAULT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO creations (id, title, category, image_url, description, dimensions)
+SELECT 1, 'Le Château de Bellevue', 'Mariages', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800', 'Décoration féerique avec arche de roses blanches et suspension de cristal.', '20m x 15m'
+WHERE NOT EXISTS (SELECT 1 FROM creations WHERE id = 1);
+
+INSERT INTO creations (id, title, category, image_url, description, dimensions)
+SELECT 2, 'Sous les Étoiles d\'Ivoire', 'Réceptions', 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800', 'Scénographie lumineuse et drapés ivoire sous chapiteau de prestige.', '30m x 20m'
+WHERE NOT EXISTS (SELECT 1 FROM creations WHERE id = 2);
+
+INSERT INTO creations (id, title, category, image_url, description, dimensions)
+SELECT 3, 'Jardin Enchanté de Roses', 'Scénographie', 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=800', 'Mur floral dense composé de roses fraîches et pivoines sauvages.', '8m x 3m'
+WHERE NOT EXISTS (SELECT 1 FROM creations WHERE id = 3);
+
 -- Créez ensuite un mot de passe sécurisé depuis le terminal :
 -- php -r "echo password_hash('VotreMotDePasseFort', PASSWORD_DEFAULT), PHP_EOL;"
 -- Puis ajoutez l'administrateur (remplacez VALEUR_DU_HASH) :
 -- INSERT INTO admins (full_name, email, password_hash)
 -- VALUES ('Administrateur', 'admin@faithdecor.com', 'VALEUR_DU_HASH');
+

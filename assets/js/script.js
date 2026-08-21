@@ -80,8 +80,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   btnWhatsapp.addEventListener('click', async () => {
+    const total = calculateBudget();
     const optionsText = selectedOptions.length ? selectedOptions.map(option => option.label).join(', ') : 'Aucune';
-    const message = `Bonjour Faith Décor, je souhaite obtenir un devis pour mon projet :\n\n💍 Événement : ${selectedEvent.label}\n📍 Lieu : ${selectedLocation.label}\n👥 Invités : ${guestCount}\n✨ Options : ${optionsText}\n\n💰 Budget estimé : ${formatPrice(calculateBudget())}`;
+
+    // Disable button to prevent multiple submissions
+    const originalText = btnWhatsapp.innerHTML;
+    btnWhatsapp.disabled = true;
+    btnWhatsapp.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enregistrement...';
+
+    try {
+      await fetch('api/save_estimation.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          event_label: selectedEvent.label,
+          location_label: selectedLocation.label,
+          guest_count: guestCount,
+          options_selected: optionsText,
+          total_price: total
+        })
+      });
+    } catch (err) {
+      console.error('Erreur lors de la sauvegarde de l\'estimation:', err);
+    } finally {
+      btnWhatsapp.disabled = false;
+      btnWhatsapp.innerHTML = originalText;
+    }
+
+    const message = `Bonjour Faith Décor, je souhaite obtenir un devis pour mon projet :\n\n💍 Événement : ${selectedEvent.label}\n📍 Lieu : ${selectedLocation.label}\n👥 Invités : ${guestCount}\n✨ Options : ${optionsText}\n\n💰 Budget estimé : ${formatPrice(total)}`;
     window.location.href = `https://wa.me/2250102797828?text=${encodeURIComponent(message)}`;
   });
 });

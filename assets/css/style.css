@@ -296,6 +296,13 @@ h4,
     min-height: 320px;
 }
 
+.hero-realisations {
+    position: relative;
+    background: url("https://images.unsplash.com/photo-1478812954026-9c750f0e89fc?auto=format&fit=crop&q=80&w=2000") no-repeat center center/cover;
+    height: 45vh;
+    min-height: 320px;
+}
+
 .filter-badge {
     cursor: pointer;
     transition: all 0.3s ease;

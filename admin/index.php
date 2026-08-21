@@ -47,6 +47,8 @@ $products = $productsStmt->fetchAll();
                         <a class="nav-link" href="add_product.php">Ajouter un article</a>
                         <a class="nav-link" href="categories.php">Gérer les catégories</a>
                         <a class="nav-link" href="estimation_settings.php">Configurer les estimations</a>
+                        <a class="nav-link" href="estimations.php">Estimations reçues</a>
+                        <a class="nav-link" href="creations.php">Galerie d'Inspirations</a>
                         <hr class="my-2">
                         <a class="nav-link" href="../index.php" target="_blank">Voir le site</a>
                         <a class="nav-link text-danger" href="logout.php">Déconnexion</a>
